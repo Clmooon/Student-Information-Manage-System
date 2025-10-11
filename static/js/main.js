@@ -248,17 +248,28 @@ createApp({
   template: `
     <div>
       <!-- 登录 -->
-      <div v-if="!user.logged_in" class="login-container">
-        <el-card class="login-card">
-          <div class="login-title">学生管理系统 {{ isRegister ? '注册':'登录' }}</div>
-          <el-form :model="loginForm" label-position="top">
-            <el-form-item label="用户名"><el-input v-model="loginForm.username" placeholder="请输入用户名"></el-input></el-form-item>
-            <el-form-item label="密码"><el-input v-model="loginForm.password" placeholder="请输入密码" show-password></el-input></el-form-item>
-            <el-button type="primary" @click="submit" style="width:100%">{{ isRegister ? '注册':'登录' }}</el-button>
-          </el-form>
-          <el-button type="text" @click="isRegister=!isRegister" class="toggle-btn">{{ isRegister ? '已有账号？去登录':'没有账号？注册' }}</el-button>
-        </el-card>
-      </div>
+   <div v-if="!user.logged_in" 
+     class="login-container" 
+     style="display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; box-sizing: border-box;">
+  <el-card class="login-card" style="width: 400px; max-width: 100%;">
+    <div class="login-title" style="text-align: center; font-size: 20px; margin-bottom: 20px;">
+      学生管理系统 {{ isRegister ? '注册':'登录' }}
+    </div>
+    <el-form :model="loginForm" label-position="top">
+      <el-form-item label="用户名">
+        <el-input v-model="loginForm.username" placeholder="请输入用户名"></el-input>
+      </el-form-item>
+      <el-form-item label="密码">
+        <el-input v-model="loginForm.password" placeholder="请输入密码" show-password></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="submit" style="width: 100%;">{{ isRegister ? '注册':'登录' }}</el-button>
+    </el-form>
+    <el-button type="text" @click="isRegister=!isRegister" class="toggle-btn" style="margin-top: 10px; display: block; width: 100%;">
+      {{ isRegister ? '已有账号？去登录':'没有账号？注册' }}
+    </el-button>
+  </el-card>
+</div>
+
 
 
 
