@@ -342,11 +342,23 @@ createApp({
             <el-form-item label="专业"><el-input v-model="editing.major"></el-input></el-form-item>
             <el-form-item label="班级"><el-input v-model="editing.class_name"></el-input></el-form-item>
 
-            <div v-for="(g,idx) in editing.grades" :key="idx" class="grade-row">
-              <el-input v-model="g.subject" placeholder="科目" style="flex:1;"></el-input>
-              <el-input-number v-model="g.score" :min="0" :max="100" :step="0.1" style="width:100px;"></el-input-number>
-              <el-button type="danger" icon="el-icon-delete" @click="removeGradeField(idx)"></el-button>
-            </div>
+            <div v-for="(g, idx) in editing.grades" :key="idx" class="grade-row" 
+     style="display: flex; align-items: center; gap: 15px; padding: 10px 0; width: 100%;">
+  <!-- 科目输入框，自适应宽度 -->
+  <el-input v-model="g.subject" placeholder="科目" style="flex: 2;"></el-input>
+
+  <!-- 分数输入框，自适应宽度 -->
+  <el-input-number v-model="g.score" :min="0" :max="100" :step="0.1" style="flex: 1;"></el-input-number>
+
+  <!-- 删除按钮靠右 -->
+  <div style="display: flex; align-items: center; justify-content: flex-end; flex: 0;">
+    <el-button type="danger" style="display: flex; align-items: center;" @click="removeGradeField(idx)">
+      <span style="margin-left: 4px;">删除</span>
+    </el-button>
+  </div>
+</div>
+
+
             <el-button type="primary" size="small" @click="addGradeField">添加科目</el-button>
           </el-form>
           <template #footer>
