@@ -1,0 +1,129 @@
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background: #f5f7fa;
+}
+
+/* 登录页容器，确保高度 100% */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+/* 登录卡片 */
+.login-card {
+  width: 400px;
+}
+
+
+/* 主应用外框 */
+.app-wrap {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  display: flex;
+  height: calc(100% - 40px);
+}
+
+/* 左侧学生列表 */
+.left-panel {
+  width: 220px;
+  border-right: 1px solid #ebeef5;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+.student-item {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  transition: 0.2s;
+}
+.student-item:hover {
+  background: #ecf5ff;
+}
+.student-item.active {
+  background: #409EFF;
+  color: #fff;
+}
+
+/* 右侧面板 */
+.right-panel {
+  flex: 1;
+  padding-left: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部区域 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* 学生详情 */
+.detail-item {
+  padding: 8px 0;
+  border-bottom: 1px dashed #eef3fb;
+  display: flex;
+}
+.detail-key {
+  width: 80px;
+  color: #909399;
+  font-weight: 500;
+}
+.detail-value {
+  color: #303133;
+  flex: 1;
+}
+.actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+/* 图表卡片 */
+.chart-card {
+  margin-top: 20px;
+}
+.chart-wrapper {
+  height: 300px;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  padding: 8px;
+  background: #fff;
+  overflow: auto;
+}
+.chart-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .app-wrap {
+    flex-direction: column;
+    max-width: 95%;
+    height: auto;
+  }
+  .left-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ebeef5;
+    margin-bottom: 12px;
+  }
+  .right-panel {
+    padding-left: 0;
+  }
+}
