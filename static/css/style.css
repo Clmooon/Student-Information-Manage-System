@@ -3,21 +3,43 @@ html, body, #app {
   margin: 0;
   font-family: "Helvetica Neue", Arial, sans-serif;
   background: #f5f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* 登录页容器，确保高度 100% */
+/* 登录页容器，确保居中 */
 .login-container {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
 }
 
 /* 登录卡片 */
 .login-card {
-  width: 400px;
+  width: 320px;          /* 小巧宽度 */
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  background-color: #ffffff;
 }
 
+/* 登录标题 */
+.login-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 切换按钮 */
+.toggle-btn {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
 
 /* 主应用外框 */
 .app-wrap {
@@ -125,5 +147,11 @@ html, body, #app {
   }
   .right-panel {
     padding-left: 0;
+  }
+
+  /* 登录卡片移动端优化 */
+  .login-card {
+    width: 90%;
+    padding: 16px;
   }
 }
