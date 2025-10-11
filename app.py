@@ -9,6 +9,9 @@ matplotlib.use('Agg')  # 使用非GUI后端
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import pandas as pd
+from werkzeug.utils import secure_filename
+
 
 # ---------- 配置 ----------
 APP_SECRET = os.environ.get('APP_SECRET') or 'change_this_secret_for_prod'
@@ -307,6 +310,76 @@ def plot_subject(subject_name):
     plt.close(fig)
     buf.seek(0)
     return send_file(buf, mimetype='image/png')
+
+# ---------- 导出学生数据为 Excel ----------
+@app.route('/api/students/export')
+@login_required
+@teacher_required
+def api_export_students():
+    students = Student.query.all()
+    data = []
+    for s in students:
+        grades = json.loads(s.grades) if s.grades else {}
+        row = {
+            '姓名': s.name,
+            '年龄': s.age,
+            '性别': s.gender,
+            '专业': s.major,
+            '班级': s.class_name
+        }
+        row.update(grades)
+        data.append(row)
+    if not data:
+        return jsonify({'error': '无学生数据可导出'}), 400
+    df = pd.DataFrame(data)
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='学生信息')
+    output.seek(0)
+    return send_file(output, as_attachment=True,
+                     download_name='学生信息.xlsx',
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+# ---------- 从 Excel 导入学生数据 ----------
+@app.route('/api/students/import', methods=['POST'])
+@login_required
+@teacher_required
+def api_import_students():
+    if 'file' not in request.files:
+        return jsonify({'error': '缺少文件'}), 400
+    file = request.files['file']
+    if not file.filename:
+        return jsonify({'error': '未选择文件'}), 400
+    filename = secure_filename(file.filename)
+    try:
+        df = pd.read_excel(file)
+    except Exception as e:
+        return jsonify({'error': f'文件读取失败: {e}'}), 400
+
+    required_cols = {'姓名', '年龄', '性别', '专业', '班级'}
+    if not required_cols.issubset(df.columns):
+        return jsonify({'error': 'Excel表头不正确，应包含：姓名、年龄、性别、专业、班级'}), 400
+
+    count = 0
+    for _, row in df.iterrows():
+        name = str(row.get('姓名') or '').strip()
+        if not name:
+            continue
+        grades = {col: row[col] for col in df.columns if col not in ['姓名', '年龄', '性别', '专业', '班级'] and pd.notna(row[col])}
+        s = Student(
+            name=name,
+            age=int(row.get('年龄') or 0),
+            gender=str(row.get('性别') or ''),
+            major=str(row.get('专业') or ''),
+            class_name=str(row.get('班级') or ''),
+            grades=json.dumps(grades)
+        )
+        db.session.add(s)
+        count += 1
+    db.session.commit()
+    return jsonify({'ok': True, 'count': count})
+
 
 
 # ---------- 前端 ----------

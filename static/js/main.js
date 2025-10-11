@@ -5,7 +5,7 @@ const { ElMessage } = ElementPlus; // ✅ 引入消息提示
 const ChartComponent = defineComponent({
   props: ['plotUrl', 'studentId'],
   setup(props) {
-    const chartType = ref('student'); // 'student' = 学生总览, 'subject' = 单科分布
+    const chartType = ref('student');
     const selectedSubject = ref('');
     const refreshKey = ref(Date.now());
     const loading = ref(false);
@@ -235,6 +235,47 @@ createApp({
       }
     }
 
+    // -------- Excel 导入 --------
+    async function importExcel(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/students/import', { method: 'POST', body: formData });
+      const j = await res.json();
+      if (res.ok) {
+        ElMessage.success(`成功导入 ${j.count} 条数据`);
+        await loadStudents();
+      } else {
+        ElMessage.error('导入失败: ' + (j.error || '未知错误'));
+      }
+    }
+
+    // ✅ 新增触发函数
+    function triggerImport() {
+      const input = document.getElementById('excelInput');
+      if (input) input.click();
+    }
+
+    // -------- Excel 导出 --------
+    async function exportExcel() {
+      const res = await fetch('/api/students/export');
+      if (!res.ok) {
+        const j = await res.json();
+        ElMessage.error('导出失败: ' + (j.error || '未知错误'));
+        return;
+      }
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '学生信息.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    }
+
     onMounted(() => checkLogin());
 
     return {
@@ -242,7 +283,7 @@ createApp({
       students, selectedStudent, q, filteredStudents,
       dialogVisible, editing, selectStudent, openAdd, openEdit,
       saveEditing, deleteStudent, addGradeField, removeGradeField,
-      users, deleteUser
+      users, deleteUser, importExcel, exportExcel, triggerImport
     };
   },
   template: `
@@ -293,6 +334,29 @@ createApp({
             <div>欢迎, <strong>{{user.username}}</strong> ({{user.role}})</div>
             <el-button size="small" @click="logout">退出</el-button>
           </div>
+        
+        <div class="header">
+  <div></div>
+  <div style="display:flex; gap:8px;">
+    <!-- 隐藏文件输入框 -->
+    <input
+      type="file"
+      id="excelInput"
+      accept=".xlsx,.xls"
+      style="display:none"
+      @change="importExcel"
+    >
+
+    <!-- 按钮绑定触发方法 -->
+    <el-button size="mini" v-if="user.role==='teacher'" @click="triggerImport">
+      导入Excel
+    </el-button>
+    <el-button size="mini" v-if="user.role==='teacher'" @click="exportExcel">
+      导出Excel
+    </el-button>
+  </div>
+</div>
+  
 
           <div v-if="selectedStudent" class="student-details">
             <div class="details-title">学生详情</div>
