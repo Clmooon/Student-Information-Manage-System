@@ -291,7 +291,17 @@ createApp({
       <!-- 登录 -->
    <div v-if="!user.logged_in" 
      class="login-container" 
-     style="display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; box-sizing: border-box;">
+     style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-image: url('https://images.unsplash.com/photo-1509021436665-8f07dbf5bf1d?auto=format&fit=crop&w=1950&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;">
   <el-card class="login-card" style="width: 400px; max-width: 100%;">
     <div class="login-title" style="text-align: center; font-size: 20px; margin-bottom: 20px;">
       学生管理系统 {{ isRegister ? '注册':'登录' }}
@@ -310,9 +320,6 @@ createApp({
     </el-button>
   </el-card>
 </div>
-
-
-
 
       <!-- 主应用 -->
       <div v-else class="app-wrap">
