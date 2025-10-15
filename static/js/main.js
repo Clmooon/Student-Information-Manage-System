@@ -319,6 +319,13 @@ createApp({
       {{ isRegister ? '已有账号？去登录':'没有账号？注册' }}
     </el-button>
   </el-card>
+  <!-- ICP备案号 -->
+<div style="position: absolute; bottom: 10px; width: 100%; text-align: center; color: #ffffffb3; font-size: 16px;">
+Copyright © 2025 Clmoon. All Rights Reserved.
+  <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" style="color: #409EFF; text-decoration: none;">
+    苏ICP备2025176775号
+  </a>
+</div>
 </div>
 
       <!-- 主应用 -->
